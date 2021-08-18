@@ -1,13 +1,57 @@
-body {
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+html{
+  box-sizing: border-box;
+}
+body{
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: row;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Menubar */
+.menubar{
+  background-color:rgb(34, 89, 134);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+}
+.menubar h2{
+  background-color: white;
+  color:rgb(34, 89, 134);
+  font-weight: 550;
+  cursor: pointer;
+  padding: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  transition: 0.3s;
+}
+.menu-icons{
+  cursor: pointer;
+  background-color: transparent;
+  vertical-align: middle;
+  margin:0px 10px 5px 5px;
+}
+ ul{
+  list-style: none;
+  padding: 0;
+  color: white;
+ }
+ li{
+   cursor: pointer;
+   padding: 7px;
+   border-bottom: 1px solid rgba(255,255,255,0.05);
+   transition: 0.3s;
+ }
+li:hover{
+  color:rgb(34, 89, 134);
+  background-color: white;
+}
+.menubar h2:hover{
+  background-color: rgb(34, 89, 134);
+  color:white;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
 }
