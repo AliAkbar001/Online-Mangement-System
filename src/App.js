@@ -1,7 +1,9 @@
+import Menubar from "./components/Menubar";
+
 function App() {
   return (
     <div>
-      Hello World!
+      <Menubar/>
     </div>
   );
 }
