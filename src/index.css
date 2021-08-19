@@ -112,6 +112,9 @@ li:hover{
   position: relative;
 }
 @media only screen and (max-width: 760px){
+  .title-bar h2{
+    padding-left: 50px;
+  }
   .menubar-title-test{
    display: none;
   }
