@@ -6,6 +6,11 @@ import { FaFileInvoiceDollar,FaMoneyBillAlt} from "react-icons/fa";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import  Home  from "./Home";
+import BillRecords from './BillRecords';
+import AllSales from "./AllSales";
+import AddProduct from"./AddProduct";
+import ManageProducts from "./ManageProducts";
+import Logout from './Logout';
 
 export default function Menubar(props) {
     const [changePages, setChangePages] = useState(<Home/>);
@@ -13,12 +18,37 @@ export default function Menubar(props) {
     const [dataWidth, setDataWidth] = useState("data-width");
     const [menubarList, setMenubarList] = useState("menubar-list");
   
-    function menuToggle(){
+    function changePage(e) {
+        if(e==="Home"){
+            setChangePages(<Home/>);
+        }
+        if(e==="BillRecords"){
+            setChangePages(<BillRecords/>);
+        }
+        if(e==="ManageProducts"){
+            setChangePages(<ManageProducts/>);
+        }
+        if(e==="AddProduct"){
+            setChangePages(<AddProduct/>);
+        }
+        if(e==="AllSales"){
+            setChangePages(<AllSales/>);
+        }
+        if(e==="Logout"){
+            setChangePages(<Logout/>); 
+        }   
+        menuToggle("sidebar");  
+    }
+
+    function menuToggle(e){
       if((menuChange==="menu-show")&&(dataWidth===null)){
-      setMenuChange("menu-hide");
-      setDataWidth("data-width");
-      setMenubarList("menubar-list");
-      }else{
+        setMenuChange("menu-hide");
+        setDataWidth("data-width");
+        setMenubarList("menubar-list");
+      }else if(e==="sidebar"){
+        setMenuChange("menu-hide");
+      }
+      else{
           setMenuChange("menu-show");
           setDataWidth(null);
           setMenubarList(null);
@@ -34,18 +64,36 @@ export default function Menubar(props) {
                 <span className="menubar-title-test">Dashboard</span>
             </h2>
             <ul className={ menubarList }>
-                <li><FaMoneyBillAlt/><span>Billing</span></li>
-                <li><FaFileInvoiceDollar/><span>Bill Records</span></li>
-                <li><AiFillSetting/><span>Manage Products</span></li>
-                <li><IoIosAddCircleOutline/><span>Add New Product</span></li>
-                <li><BsFillBarChartFill/><span>All Sales</span></li>
-                <li><RiLogoutBoxFill/><span> Logout</span></li>
+                <li onClick={()=>changePage("Home")}>
+                    <FaMoneyBillAlt/>
+                    <span>Billing</span>
+                </li>
+                <li onClick={()=>changePage("BillRecords")}>
+                    <FaFileInvoiceDollar/>
+                    <span>Bill Records</span>
+                </li>
+                <li onClick={()=>changePage("ManageProducts")}>
+                    <AiFillSetting/>
+                    <span>Manage Products</span>
+                </li>
+                <li onClick={()=>changePage("AddProduct")}>
+                    <IoIosAddCircleOutline/>
+                    <span>Add New Product</span>
+                </li>
+                <li onClick={()=>changePage("AllSales")}>
+                    <BsFillBarChartFill/>
+                    <span>All Sales</span>
+                </li>
+                <li onClick={()=>changePage("Logout")}>
+                    <RiLogoutBoxFill/>
+                    <span> Logout</span>
+                </li>
             </ul>
             </IconContext.Provider>
         </div>
         </div>
         <div className={"data " + dataWidth}>
-        {changePages}
+            {changePages}
         </div>
     </div>
     )
