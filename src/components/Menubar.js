@@ -12,7 +12,7 @@ import AddProduct from"./AddProduct";
 import ManageProducts from "./ManageProducts";
 import Logout from './Logout';
 
-export default function Menubar(props) {
+export default function Menubar() {
     const [changePages, setChangePages] = useState(<Home/>);
     const [menuChange, setMenuChange] = useState("menu-hide");
     const [dataWidth, setDataWidth] = useState("data-width");
