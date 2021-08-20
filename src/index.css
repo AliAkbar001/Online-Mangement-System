@@ -43,6 +43,7 @@ body{
   color: white;
   transition: 0.5s;
 }
+
 /* Menubar */
 .menubar{
   height: 100%;
@@ -116,6 +117,8 @@ li:hover{
   color:rgb(34, 89, 134);
   position: relative;
 }
+
+/*Mobile View*/
 @media only screen and (max-width: 760px){
   .title-bar h2{
     padding-left: 50px;
