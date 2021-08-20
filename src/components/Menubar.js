@@ -59,8 +59,8 @@ export default function Menubar() {
         <div  className={"menubar " + menuChange}>
         <div className={ menuChange }>
             <IconContext.Provider value={{className:"icons menubar-icons", size:"1.5rem"}}>
-            <h2 className="menubar-title" onClick={()=>menuToggle()} >
-                <AiFillLeftCircle size="2rem"/>
+            <h2 className="menubar-title">
+                <span className="menubar-title-icon"  onClick={()=>menuToggle()}><AiFillLeftCircle size="2rem"/></span>
                 <span className="menubar-title-test">Dashboard</span>
             </h2>
             <ul className={ menubarList }>
