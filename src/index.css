@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 html{
   box-sizing: border-box;
+  background-color: rgb(221, 221, 221);
 }
 body{
   margin: 0;
   padding: 0;
+  color: rgb(34, 89, 134);
   font-family: Montserrat, Helvetica, Arial, sans-serif;
 }
 .icons{
@@ -20,6 +22,48 @@ body{
  .data-width {
    margin-left: 3rem; 
  }
+ table{
+  width: 100%;
+	border-collapse: collapse;
+ }
+ table td,table th{
+  padding:10px 12px;
+  border:1px solid rgb(219, 225, 233);
+  text-align: center;
+  font-weight: 500;
+  font-size:16px;
+}
+
+table  thead th{
+	background-color: rgb(34, 89, 134);
+	color:#ffffff;
+	position:relative;
+	z-index: 1;
+	position: sticky;
+	top: 10%;
+}
+table tbody tr{
+	background-color: #e2dddd;
+}
+table tbody tr:nth-child(even){
+	background-color: #ffffff;
+}
+button{
+  cursor: pointer;
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 100;
+  color: white;
+  background: rgb(34, 89, 134);
+  letter-spacing: 0.1rem;
+  border: none;
+}
+button:hover{
+  border: 1px solid rgb(34, 89, 134);
+    background: rgb(238, 238, 238);
+    color: rgb(34, 89, 134);
+    transition: 0.3s;
+}
 /* Title Bar */
 .title-bar{
   display: flex;
@@ -29,7 +73,7 @@ body{
   overflow: hidden;
   z-index: 2;
   top: 0;
-  color: rgb(34, 89, 134);
+  background-color: white;
   box-shadow:inset 0 -4px 3px rgb(218, 216, 216);
 }
 .title-bar-icons{
@@ -64,7 +108,6 @@ body{
   .menubar-title{
   position:fixed;
   background-color: white;
-  color:rgb(34, 89, 134);
   font-weight: 550;
   padding: 5px;
   top:0;
@@ -78,26 +121,26 @@ body{
 }
 .menubar-title-icon:hover{
   color: white;
-  padding-top: 7px;
-  padding-bottom: 7px;
-  padding-left: 3px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  padding-left: 4px;
   background-color: rgb(34, 89, 134);
   border-radius: 50%;
   transition: 0.5s;
 }
- ul{
+.menubar ul{
   list-style: none;
   margin-top: 80px;
   padding-left: 0;
   color: white;
  }
- li{
+.menubar li{
    cursor: pointer;
    padding: 7px;
    border-bottom: 1px solid rgba(255,255,255,0.05);
    transition: 0.3s;
  }
-li:hover{
+.menubar li:hover{
   color:rgb(34, 89, 134);
   background-color: white;
 }
@@ -114,10 +157,73 @@ li:hover{
 .hide-menu{
   text-align: left;
   background-color: white;
-  color:rgb(34, 89, 134);
   position: relative;
 }
+/*Home Page*/
+.home{
+  display: flex;
+  flex-direction: row; 
+  margin: 10px;
+  font-weight: 600;
+}
 
+.home-add-product{
+  background-color: white;
+  padding: 5px 20px 20px 20px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.home-add-product p{
+  font-size: 22px;
+}
+.home-img-form{
+  display: flex;
+  flex-direction: row;
+}
+.home-img-form form{
+  margin-left: 15px;
+}
+.home-img-form img{
+  background: white;
+  object-fit: cover;
+  height: 300px;
+  width: 300px;
+}
+.home-img-form form{
+  text-align: right;
+}
+.home-img-form form label{
+  padding: 5px;
+}
+.home-img-form form input{
+    width: 250px;
+    height: 30px;
+    font-weight: 600;
+    font-size: 17px;
+    margin: 5px 0px 5px 15px;
+    padding-left: 10px;
+    border: 1px solid rgb(34, 89, 134);
+}
+.home-table{
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+.home-table button{
+  margin: 5px;
+}
+.total-price{
+  font-weight: 600;
+  letter-spacing: 00.1rem;
+}
+@media only screen and (max-width: 1080px){
+  .home{
+    flex-direction: column; 
+  }
+  .home-table{
+    margin: 10px;
+  }
+}
 /*Mobile View*/
 @media only screen and (max-width: 760px){
   .title-bar h2{
@@ -135,4 +241,36 @@ li:hover{
   .data-width {
     margin-left: 1rem; 
   }
+  .home-img-form{
+    flex-direction: column;
+  }
+  .home-img-form form{
+    margin-top: 5px;
+  }
+  table thead{
+		display: none;
+	}
+
+	table, table tbody, table tr, table td{
+		display: block;
+	}
+	table tr{
+		margin-bottom:15px;
+	}
+	table td{
+		text-align: right;
+		padding-left: 50%;
+		text-align: right;
+		position: relative;
+	}
+	table td::before{
+		content: attr(data-label);
+		position: absolute;
+		left:0;
+		width: 50%;
+		padding-left:15px;
+		font-size:15px;
+		font-weight: bold;
+		text-align: left;
+	}
 }
