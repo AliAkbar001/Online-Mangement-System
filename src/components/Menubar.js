@@ -17,24 +17,31 @@ export default function Menubar() {
     const [menuChange, setMenuChange] = useState("menu-hide");
     const [dataWidth, setDataWidth] = useState("data-width");
     const [menubarList, setMenubarList] = useState("menubar-list");
+    const [pageName, setPageName] = useState("Home");
   
     function changePage(e) {
         if(e==="Home"){
+            setPageName("Home");
             setChangePages(<Home/>);
         }
         if(e==="BillRecords"){
+            setPageName("Bill Records");
             setChangePages(<BillRecords/>);
         }
         if(e==="ManageProducts"){
+            setPageName("Manage Products");
             setChangePages(<ManageProducts/>);
         }
         if(e==="AddProduct"){
+            setPageName("Add Product");
             setChangePages(<AddProduct/>);
         }
         if(e==="AllSales"){
+            setPageName("All Sales");
             setChangePages(<AllSales/>);
         }
         if(e==="Logout"){
+            setPageName("Logout");
             setChangePages(<Logout/>); 
         }   
         menuToggle("sidebar");  
@@ -63,7 +70,7 @@ export default function Menubar() {
                 <span className="menubar-title-icon" onClick={()=>menuToggle()}>
                     <AiFillLeftCircle size="2rem"/>
                 </span>
-                <span className="menubar-title-test">Dashboard</span>
+                <span className="menubar-title-test">{pageName}</span>
             </h2>
             <ul className={ menubarList }>
                 <li onClick={()=>changePage("Home")}>

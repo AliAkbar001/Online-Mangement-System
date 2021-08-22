@@ -43,14 +43,14 @@ export default function Home() {
                     </thead>
                     <tbody>
                     <tr>
-                        <td scope="row" data-label="Code">1</td>
+                        <td data-label="Code">1</td>
                         <td data-label="Name">1</td>
                         <td data-label="Quantity">1</td>
                         <td data-label="Price">1</td>
                         <td data-label="Delete"><AiFillDelete/></td>
                     </tr>
                     <tr>
-                        <td scope="row" data-label="Code">1</td>
+                        <td data-label="Code">1</td>
                         <td data-label="Name">1</td>
                         <td data-label="Quantity">1</td>
                         <td data-label="Price">1</td>

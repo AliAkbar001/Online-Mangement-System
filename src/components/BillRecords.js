@@ -1,8 +1,12 @@
 import React,{useState} from 'react';
-import Modal from "react-modal";
+import {AiFillCloseCircle} from "react-icons/ai";
 
 export default function BillRecords() {
-    const [model, setModel] = useState(false);
+    const [data, setData] = useState(false);
+
+    function toggleModel(){
+        data ? setData(false) : setData(true) ;
+    }
     return (
         <div className="bill-record">
             <div className="bill-record-top-bar">
@@ -16,14 +20,53 @@ export default function BillRecords() {
                     <h3>Rs 2000</h3>
                 </div>
                 <div className="bill-record-buttons">
-                    <button>VIEW</button>
+                    <button onClick={()=>toggleModel()}>VIEW</button>
                     <button>Print</button>
                     <button className="delete-btn">Delete</button>
                 </div>
             </div>
-            <Modal isOpen={true} onRequestClose={this.closeModal}>
-
-            </Modal>
+            {data && (
+            <div className="popup-container">
+            <div className="popup">
+                <div className="bill-items-top">
+                    <h4>1997-31-05</h4>
+                    <h4>Bill Number</h4>
+                    <h4>12:00:00</h4>
+                    <AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/>
+                </div>
+                <div>
+                <table>
+                <thead>
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td data-label="Code">1</td>
+                    <td data-label="Name">1</td>
+                    <td data-label="Quantity">1</td>
+                    <td data-label="Price">1</td>
+                </tr>
+                <tr>
+                    <td data-label="Code">1</td>
+                    <td data-label="Name">1</td>
+                    <td data-label="Quantity">1</td>
+                    <td data-label="Price">1</td>
+                </tr>
+                <tr>        
+                    <td colSpan="2">Total</td>
+                    <td colSpan="3" className="total-price">1000</td>
+                </tr>
+            </tbody>
+            </table>
+                </div>
+        </div>
+        </div>
+        )}
         </div>
     )
 }
