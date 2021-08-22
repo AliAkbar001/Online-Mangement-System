@@ -64,6 +64,30 @@ button:hover{
     color: rgb(34, 89, 134);
     transition: 0.3s;
 }
+.delete-btn{
+  background-color: #F8D7DA;
+    color: #721C24;
+}
+.delete-btn:hover{
+  color: #F8D7DA;
+  background-color:#721C24;;
+	transition: 0.3s;
+}
+input[type=search],input[type=date]{
+  width: 700px;
+  padding: 10px;
+  font-size: 17px;
+  box-sizing: border-box;
+  border: 3px solid #ccc;
+  transition: 0.5s;
+  outline: none;
+}
+input[type=date]{
+  width: 300px;
+}
+input[type=search]:focus,input[type=date]:focus{
+  border: 2px solid rgb(34, 89, 134);
+}
 /* Title Bar */
 .title-bar{
   display: flex;
@@ -216,6 +240,33 @@ button:hover{
   font-weight: 600;
   letter-spacing: 00.1rem;
 }
+/*Bill Record*/
+.bill-record-top-bar{
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.bill-record-data{
+  display: flex;
+  justify-content: space-between;
+  margin: 10px;
+  background-color: white;
+  padding:1px 10px 1px 10px;
+  border-radius: 10px;
+}
+.border-line{
+  width: 300px;
+  height: 2px;
+  background-color:rgb(34, 89, 134);
+}
+.bill-record-buttons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bill-record-buttons button{
+  margin: 5px;
+}
 @media only screen and (max-width: 1080px){
   .home{
     flex-direction: column; 
@@ -273,4 +324,7 @@ button:hover{
 		font-weight: bold;
 		text-align: left;
 	}
+  .border-line{
+    width:130px;
+  }
 }
