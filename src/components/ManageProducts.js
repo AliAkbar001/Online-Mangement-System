@@ -7,7 +7,6 @@ export default function ManageProducts() {
     const [searchBy, setSearchBy] = useState("Code");
     function handleClick(e){
         setSearchBy(e.target.value);
-        console.log(searchBy);
     }
     return (
         <div className="manage-products">
@@ -15,16 +14,16 @@ export default function ManageProducts() {
                 <input type="search" placeholder={"Search Product By " + searchBy}/>
                 <select value={searchBy} onChange={handleClick}>
                     <option value="Code">Code</option>
-                    <option value="Name">Name A-Z</option>
-                    <option value="Company">Company A-Z</option>
-                    <option value="Category">Category A-Z</option>
-                    <option value="Quantity">Quantity 0-1</option>
-                    <option value="Purchase Price">Purchase Price 0-1</option>
-                    <option value="Total Quantity">Sold Quantity 0-1</option>
-                    <option value="Expire Date">Expiry Date 0-1</option>
+                    <option value="Name">Name</option>
+                    <option value="Company">Company</option>
+                    <option value="Category">Category</option>
+                    <option value="Quantity">Quantity</option>
+                    <option value="Purchase Price">Purchase</option>
+                    <option value="Total Quantity">Sold Quantity</option>
+                    <option value="Expire Date">Expiry Date</option>
                 </select>
                 <select>
-                    <option value="">Sort By</option>
+                    <option value="">--- Sort By ---</option>
                     <option value="code">Code</option>
                     <option value="name">Name A-Z</option>
                     <option value="company">Company A-Z</option>
@@ -60,10 +59,10 @@ export default function ManageProducts() {
                     <td data-label="Company">0</td>
                     <td data-label="Expire Date">0</td>
                     <td data-label="Options">
-                        <div>
-                        <button title="Product Image"><BsFillImageFill size="1.5rem"/></button>
-                        <button title="Edit Product"><FaEdit size="1.5rem"/></button>
-                        <button title="Delete Product"><AiFillDelete size="1.5rem"/></button>
+                    <div className="manage-buttons">
+                        <button className="view-product" title="Product Image"><BsFillImageFill size="1.5rem"/></button>
+                        <button className="update-product" title="Edit Product"><FaEdit size="1.5rem"/></button>
+                        <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
                         </div>
                     </td>
                 </tr>
@@ -77,10 +76,10 @@ export default function ManageProducts() {
                     <td data-label="Company">0</td>
                     <td data-label="Expire Date">0</td>
                     <td data-label="Options">
-                        <div>
-                        <button title="Product Image"><BsFillImageFill size="1.5rem"/></button>
-                        <button title="Edit Product"><FaEdit size="1.5rem"/></button>
-                        <button title="Delete Product"><AiFillDelete size="1.5rem"/></button>
+                        <div className="manage-buttons">
+                        <button className="view-product" title="Product Image"><BsFillImageFill size="1.5rem"/></button>
+                        <button className="update-product" title="Edit Product"><FaEdit size="1.5rem"/></button>
+                        <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
                         </div>
                     </td>
                 </tr>

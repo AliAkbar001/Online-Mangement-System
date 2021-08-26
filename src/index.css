@@ -308,6 +308,30 @@ input[type=search]:focus,input[type=date]:focus,select:focus{
 }
 .manage-products-top{
   display: flex;
+  margin-bottom: 30px;
+}
+.manage-buttons{
+  display: flex;
+  justify-content: space-around;
+}
+.manage-buttons button{
+  background: transparent;
+  color: rgb(34, 89, 134);
+  padding: 0;
+}
+.manage-buttons button:hover{
+  padding: 0;
+  border: none;
+  transition: 0.3s;
+}
+.view-product:hover{
+  color: rgb(0, 204, 255);
+}
+.update-product:hover{
+  color: #085c1b;
+}
+.delete-product:hover{
+  color: #721C24;
 }
 @media only screen and (max-width: 1080px){
   .home{
