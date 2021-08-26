@@ -1,6 +1,5 @@
 import React,{useState} from 'react';
 import {AiFillCloseCircle} from "react-icons/ai";
-
 export default function BillRecords() {
     const [data, setData] = useState(false);
 
@@ -32,7 +31,7 @@ export default function BillRecords() {
                     <h4>1997-31-05</h4>
                     <h4>Bill Number</h4>
                     <h4>12:00:00</h4>
-                    <AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/>
+                    <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/></span>
                 </div>
                 <div>
                 <table>
