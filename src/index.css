@@ -73,8 +73,7 @@ button:hover{
   background-color:#721C24;;
 	transition: 0.3s;
 }
-input[type=search],input[type=date]{
-  width: 700px;
+input[type=search],input[type=date],select{
   padding: 10px;
   font-size: 17px;
   box-sizing: border-box;
@@ -82,10 +81,16 @@ input[type=search],input[type=date]{
   transition: 0.5s;
   outline: none;
 }
+input[type=search]{
+  width: 60%;
+}
 input[type=date]{
   width: 300px;
 }
-input[type=search]:focus,input[type=date]:focus{
+select{
+  width: 20%;
+}
+input[type=search]:focus,input[type=date]:focus,select:focus{
   border: 2px solid rgb(34, 89, 134);
 }
 .popup-container{
@@ -296,6 +301,13 @@ input[type=search]:focus,input[type=date]:focus{
 }
 .bill-items-top span:hover{
   cursor: pointer;
+}
+/*Manage Products*/
+.manage-products{
+  margin-right: 10px;
+}
+.manage-products-top{
+  display: flex;
 }
 @media only screen and (max-width: 1080px){
   .home{
