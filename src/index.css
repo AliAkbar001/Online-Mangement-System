@@ -73,7 +73,12 @@ button:hover{
   background-color:#721C24;;
 	transition: 0.3s;
 }
-input[type=search],input[type=date],select{
+input[type=text],
+input[type=search],
+input[type=date],
+input[type=number],
+input[type=file],
+select{
   padding: 10px;
   font-size: 17px;
   box-sizing: border-box;
@@ -90,13 +95,19 @@ input[type=date]{
 select{
   width: 20%;
 }
-input[type=search]:focus,input[type=date]:focus,select:focus{
+input[type=search]:focus,
+input[type=date]:focus,
+input[type=text]:focus,
+input[type=number]:focus,
+input[type=file]:focus,
+select:focus{
   border: 2px solid rgb(34, 89, 134);
 }
 .popup-container{
-  position: absolute;
+  position: fixed;
   width: 100%;
-  height: 100%;
+  height: 100%; 
+  overflow: auto;
   background-color:rgba(0, 0, 0, 0.178);
   top: 0;
   left: 0;
@@ -114,6 +125,27 @@ input[type=search]:focus,input[type=date]:focus,select:focus{
   padding: 15px;
   border-radius: 15px;
   border: 2px solid rgb(34, 89, 134);
+}
+.product-data-form{
+  padding: 15px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+.product-data-form input{
+  margin: 5px 5px 10px 10px;
+  padding: 5px;
+}
+.product-data-form input[type=file],.product-data-form input[type=date]{
+ width: auto;
+}
+.product-data-form button{
+  width: 200px;
+  margin: 20px;
+}
+.form-modal img{
+  width: 32%;
+  height: 32%;
 }
 /* Title Bar */
 .title-bar{
@@ -161,6 +193,7 @@ input[type=search]:focus,input[type=date]:focus,select:focus{
   background-color: white;
   font-weight: 550;
   padding: 5px;
+  padding-right: 100px;
   top:0;
   margin-top: 12px;
   text-transform: uppercase;
@@ -333,12 +366,50 @@ input[type=search]:focus,input[type=date]:focus,select:focus{
 .delete-product:hover{
   color: #721C24;
 }
+.product-details{
+  display: flex;
+  justify-content: space-between;
+}
+.product-details img{
+  width: 40%;
+  height: 40%;
+}
+.product-details div{
+  width: 50%;
+  text-align: left;
+  padding: 30px;
+  background-color: rgb(238, 238, 238);
+}
+.product-details div h4{
+  letter-spacing: 00.1rem;
+  border-bottom: 2px solid white ;
+  padding: 7px;
+}
+.product-details button{
+  display: none;
+}
+.form-modal{
+  display: flex;
+  justify-content: space-between;
+}
+.form-modal .close-product{
+  display: none;
+}
+/*Add Product*/
+.add-product-form{
+  background-color: white;
+  padding: 20px;
+}
 @media only screen and (max-width: 1080px){
   .home{
     flex-direction: column; 
   }
   .home-table{
     margin: 10px;
+  }
+  .update-product{
+    margin-left: 3px;
+    margin-right: 3px;
   }
 }
 /*Mobile View*/
@@ -392,5 +463,46 @@ input[type=search]:focus,input[type=date]:focus,select:focus{
 	}
   .border-line{
     width:130px;
+  }
+  .product-details{
+    flex-direction: column;
+  }
+  .product-details img{
+    padding-top:500px;
+    width: 100%;
+    height: 100%;
+  }
+  .product-details div{
+    margin: 10px;
+    width: 80%;
+  }
+  .product-details .close-product{
+    display: none;
+  }
+  .product-details button{
+    margin-top: 5px;
+    display: block;
+  }
+  .manage-products .popup-container .popup h2{
+    padding-top:500px;
+  }
+  .form-modal{
+    flex-direction: column;
+  }
+  .form-modal img{
+    width: 100%;
+    height: 100%;
+  }
+  .form-modal span{
+    display: none;
+  }
+  .form-modal .close-product{
+    display: block;
+    margin-top: 10px;
+  }
+  .product-data-form div{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
   }
 }
