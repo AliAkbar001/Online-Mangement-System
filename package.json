@@ -1,6 +1,7 @@
 {
   "name": "online-mangement-system",
   "version": "0.1.0",
+  "homepage": "https://www.zebracrossing.pk/ali7676",
   "private": true,
   "dependencies": {
     "@fullcalendar/daygrid": "^5.9.0",
