@@ -465,7 +465,10 @@ select:focus{
 		text-align: left;
 	}
   .border-line{
-    width:130px;
+    width:200px;
+  }
+  .bill-record-data{
+    flex-direction: column;
   }
   .product-details{
     flex-direction: column;
