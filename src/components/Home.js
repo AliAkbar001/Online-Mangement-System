@@ -7,7 +7,7 @@ export default function Home() {
             <div className="home-add-product">
                 <p>Add Product</p>
                 <div className="home-img-form">
-                <img src="/images/dress1.jpg" alt="ProductImage"/>
+                <img src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80" alt="ProductImage"/>
                 <form>
                     <label>Code:</label>
                     <input type="text"/>
@@ -31,7 +31,7 @@ export default function Home() {
             <div className="home-table">
                 <button>Save & Print</button>
                 <button>Save</button>
-                <table>
+                <table className="table">
                     <thead>
                     <tr>
                         <th scope="col">Code</th>

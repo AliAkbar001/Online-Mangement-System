@@ -46,7 +46,7 @@ export default function ManageProducts() {
                     <option value="expire_date">Expiry Date 0-1</option>
                 </select>
             </div>
-            <table>
+            <table className="table">
                 <thead>
                     <tr>
                         <th scope="col">Code</th>
@@ -101,7 +101,7 @@ export default function ManageProducts() {
         <div className="popup-container">
             <div className="popup">
                 <div className="product-details">
-                    <img src="/images/dress5.jpg" alt="Dress 5"/>
+                    <img src="https://images.unsplash.com/photo-1630327064614-4e74d61f2a24?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dress 5"/>
                     <div>
                         <h4>Name: <span>0</span></h4>
                         <h4>Product Code: <span>0</span></h4>
@@ -166,7 +166,7 @@ export default function ManageProducts() {
                     <button type="submit">Edit Product</button>
                     </div> 
                     </form>
-                    <img src="/images/dress6.jpg" alt="Dress 6"/>
+                    <img src="https://images.unsplash.com/photo-1553272725-086100aecf5e?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw3Mnx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dress 6"/>
                     <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel("form")}/></span>
                     <button className="close-product" onClick={()=>toggleModel("form")}>Close</button>
                 </div>

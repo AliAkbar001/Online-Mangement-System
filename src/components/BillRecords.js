@@ -10,7 +10,7 @@ export default function BillRecords() {
         <div className="bill-record">
             <div className="bill-record-top-bar">
             <input type="search" placeholder="Bill Number"/>
-            <input type="date"/>
+            <input type="date" placeholder="Select Date"/>
             </div>
             <div className="bill-record-data">
                 <div>
@@ -34,7 +34,7 @@ export default function BillRecords() {
                     <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/></span>
                 </div>
                 <div>
-                <table>
+                <table className="table">
                 <thead>
                 <tr>
                     <th scope="col">Code</th>

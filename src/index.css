@@ -22,11 +22,11 @@ body{
  .data-width {
    margin-left: 3rem; 
  }
- table{
+ .table{
   width: 100%;
 	border-collapse: collapse;
  }
- table td,table th{
+ .table td,.table th{
   padding:10px 12px;
   border:1px solid rgb(219, 225, 233);
   text-align: center;
@@ -34,7 +34,7 @@ body{
   font-size:16px;
 }
 
-table  thead th{
+.table  thead th{
 	background-color: rgb(34, 89, 134);
 	color:#ffffff;
 	position:relative;
@@ -42,10 +42,10 @@ table  thead th{
 	position: sticky;
 	top: 10%;
 }
-table tbody tr{
+.table tbody tr{
 	background-color: #e2dddd;
 }
-table tbody tr:nth-child(even){
+.table tbody tr:nth-child(even){
 	background-color: #ffffff;
 }
 button{
@@ -400,6 +400,18 @@ select:focus{
   background-color: white;
   padding: 20px;
 }
+/*All Sales*/
+.fc-col-header-cell{
+  color: white;
+  background-color: rgb(34, 89, 134);
+}
+.fc-daygrid-day-frame{
+  background-color: white;
+}
+.fc-event-title-container{
+  background-color: rgb(34, 89, 134);
+  padding: 2px;
+}
 @media only screen and (max-width: 1080px){
   .home{
     flex-direction: column; 
@@ -438,23 +450,23 @@ select:focus{
   .home-img-form form{
     margin-top: 5px;
   }
-  table thead{
+  .table thead{
 		display: none;
 	}
 
-	table, table tbody, table tr, table td{
+  .table, .table tbody, .table tr, .table td{
 		display: block;
 	}
-	table tr{
+	.table tr{
 		margin-bottom:15px;
 	}
-	table td{
+	.table td{
 		text-align: right;
 		padding-left: 50%;
 		text-align: right;
 		position: relative;
 	}
-	table td::before{
+	.table td::before{
 		content: attr(data-label);
 		position: absolute;
 		left:0;

@@ -45,7 +45,7 @@ export default function AddProduct() {
                     <button type="submit">Add Product</button>
                     </div> 
                 </form>
-                <img src="/images/dress6.jpg" alt="Dress 6"/>
+                <img src="https://images.unsplash.com/photo-1630277922011-8241795086ae?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw0MHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dress 6"/>
                 <span></span>
             </div>
         </div>
