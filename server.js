@@ -5,7 +5,7 @@ async function main(){
  const client = new MongoClient(url);
  try{
     await client.connect();
-    await updateProduct(client,"apple",{company:"Gilgit"})
+    await deleteManyProducts(client,"apple")
  }catch(e){
      console.log(e);
  }finally{ 
@@ -14,9 +14,35 @@ async function main(){
 }
 main().catch(console.error);
 
+async function deleteManyProducts(client,item){
+    const result = await client.db("online_mangement_system").collection("products").deleteMany({name:item})
+    console.log(`Delete Fields: ${result.deletedCount}`)
+}
+
+async function deleteProduct(client,item){
+    const result = await client.db("online_mangement_system").collection("products").deleteOne({name:item})
+    console.log(`Delete Fields: ${result.deletedCount}`)
+}
+
+async function updateAllProductsProperty(client){
+    const result = await client.db("online_mangement_system").collection("products").updateMany({category:{$exists:false}}, {$set:{category:"Unknown"}})
+    console.log(`Match count: ${result.matchedCount}`)
+    console.log(`Modified Fields: ${result.modifiedCount}`)
+}
+
+async function upsertProduct(client,name,newName){
+    const result = await client.db("online_mangement_system").collection("products").updateOne({name:name},{$set:newName},{upsert: true})
+    console.log(`Match count: ${result.matchedCount}`)
+    if(result.upsertedCount > 0){
+        console.log(`Product insert with ID ${result.upsertedId}`)
+    }else{
+        console.log(`Modified Fields: ${result.modifiedCount}`)
+    }
+}
+
 async function updateProduct(client,name,newName){
 const result = await client.db("online_mangement_system").collection("products").updateOne({name:name},{$set:newName})
-console.log(`Match count: ${result.matchCount}`)
+console.log(`Match count: ${result.matchedCount}`)
 console.log(`Modified Fields: ${result.modifiedCount}`)
 }
 
@@ -55,6 +81,10 @@ async function databasesList(client){
         console.log(db.name)
     });
 }
+//await deleteProduct(client,"watch")
+//await updateAllProductsProperty(client)
+// await upsertProduct(client,"Watch",{company:"Apple",selling_price:30000,purchase_price:45000,image:"imag2.png"})
+//await updateProduct(client,"apple",{company:"Gilgit"})
 //await databasesList(client);
     // await addProduct(client,{
     //     _id : "apple1",
