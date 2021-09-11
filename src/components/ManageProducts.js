@@ -1,14 +1,30 @@
-import React, { useState }  from 'react';
+import React, { useState,useEffect }  from 'react';
 import {AiFillDelete} from "react-icons/ai";
 import {FaEdit} from "react-icons/fa";
 import {BsFillImageFill} from "react-icons/bs";
 import {AiFillCloseCircle} from "react-icons/ai";
+import { productURL } from '../fetch_data/apiUrl';
+import Progressbar from './Progressbar';
 
 export default function ManageProducts() {
     const [searchBy, setSearchBy] = useState("Code");
     const [data, setData] = useState(false);
     const [form, setForm] = useState(false);
+    const [getData, setGetData] = useState(false);
 
+    useEffect(() => {
+    fetch(productURL)
+    .then(res => res.json())
+    .then(
+        (result)=>{
+            setGetData(result);
+            },
+        (error) => {
+            setGetData(error);
+        }
+    )
+    },[]);
+      
     function toggleModel(e){
         if(e==="view"){
             data ? setData(false) : setData(true);
@@ -54,22 +70,23 @@ export default function ManageProducts() {
                         <th scope="col">Category</th>
                         <th scope="col">Purchase Price(RS)</th>
                         <th scope="col">Selling Price(RS)</th>
-                        <th scope="col">Quantity</th>
+                        <th scope="col">Available Quantity</th>
                         <th scope="col">Company</th>
                         <th scope="col">Expire Date</th>
                         <th colSpan="2" scope="col">Options</th>
                     </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td data-label="Code">0</td>
-                    <td data-label="Name">0</td>
-                    <td data-label="Category">0</td>
-                    <td data-label="Purchase Price(RS)">0</td>
-                    <td data-label="Selling Price(RS)">0</td>
-                    <td data-label="Quantity">0</td>
-                    <td data-label="Company">0</td>
-                    <td data-label="Expire Date">0</td>
+            {getData ?  (getData.map(product =>(
+                    <tr>
+                    <td data-label="Code">{product._id}</td>
+                    <td data-label="Name">{product.name}</td>
+                    <td data-label="Category">{product.category}</td>
+                    <td data-label="Purchase Price(RS)">{product.purchase_price}</td>
+                    <td data-label="Selling Price(RS)">{product.selling_price}</td>
+                    <td data-label="Available Quantity">{product.quantity}</td>
+                    <td data-label="Company">{product.company}</td>
+                    <td data-label="Expire Date">{!product.expiry_date?"none":product.expiry_date}</td>
                     <td data-label="Options">
                     <div className="manage-buttons">
                         <button className="view-product" title="Product Image" onClick={()=>toggleModel("view")}><BsFillImageFill size="1.5rem"/></button>
@@ -77,24 +94,10 @@ export default function ManageProducts() {
                         <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
                         </div>
                     </td>
-                </tr>
+                </tr>))):
                 <tr>
-                    <td data-label="Code">0</td>
-                    <td data-label="Name">0</td>
-                    <td data-label="Category">0</td>
-                    <td data-label="Purchase Price(RS)">0</td>
-                    <td data-label="Selling Price(RS)">0</td>
-                    <td data-label="Quantity">0</td>
-                    <td data-label="Company">0</td>
-                    <td data-label="Expire Date">0</td>
-                    <td data-label="Options">
-                        <div className="manage-buttons">
-                        <button className="view-product" title="Product Image" onClick={()=>toggleModel("view")}><BsFillImageFill size="1.5rem"/></button>
-                        <button className="update-product" title="Edit Product" onClick={()=>toggleModel("form")}><FaEdit size="1.5rem"/></button>
-                        <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
-                        </div>
-                    </td>
-                </tr> 
+                    <td colSpan="9"><Progressbar visibility={true}/></td>
+                </tr>}
             </tbody>
         </table>
         {data && (
@@ -107,7 +110,9 @@ export default function ManageProducts() {
                         <h4>Product Code: <span>0</span></h4>
                         <h4>Category: <span>0</span></h4>
                         <h4>Company: <span>0</span></h4>
-                        <h4>Quantity: <span>0</span></h4>
+                        <h4>Sold Quantity: <span>0</span></h4>
+                        <h4>Available Quantity: <span>0</span></h4>
+                        <h4>Total Quantity: <span>0</span></h4>
                         <h4>Image Name: <span>0</span></h4>
                         <h4>Purchase Price: <span>0</span></h4>
                         <h4>Selling Price: <span>0</span></h4>

@@ -1,13 +1,14 @@
 import React from 'react'
 
 export default function AddProduct() {
+    
     return (
         <div className="add-product">
             <div className="form-modal add-product-form">
-                <form className="product-data-form">
+                <form className="product-data-form" autoComplete="off" enctype="multipart/form-data">
                     <div>
                     <label>Product Code</label>
-                    <input type="text" name="product_code" required/>
+                    <input type="text" name="_id" required/>
                     </div>
                     <div>
                     <label>Select Image</label>

@@ -140,6 +140,10 @@ select:focus{
   width: 32%;
   height: 32%;
 }
+.progress-bar{
+  background-color: white;
+  padding: 20px;
+}
 /* Title Bar */
 .title-bar{
   display: flex;
