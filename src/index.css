@@ -43,10 +43,10 @@ body{
 	top: 10%;
 }
 .table tbody tr{
-	background-color: #e2dddd;
+  background-color: #ffffff;
 }
 .table tbody tr:nth-child(even){
-	background-color: #ffffff;
+	background-color: #e2dddd;
 }
 button{
   cursor: pointer;

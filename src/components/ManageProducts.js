@@ -78,7 +78,7 @@ export default function ManageProducts() {
             </thead>
             <tbody>
             {getData ?  (getData.map(product =>(
-                    <tr>
+                    <tr key={product._id}>
                     <td data-label="Code">{product._id}</td>
                     <td data-label="Name">{product.name}</td>
                     <td data-label="Category">{product.category}</td>
@@ -86,7 +86,7 @@ export default function ManageProducts() {
                     <td data-label="Selling Price(RS)">{product.selling_price}</td>
                     <td data-label="Available Quantity">{product.quantity}</td>
                     <td data-label="Company">{product.company}</td>
-                    <td data-label="Expire Date">{!product.expiry_date?"none":product.expiry_date}</td>
+                    <td data-label="Expire Date">{product.expiry_date}</td>
                     <td data-label="Options">
                     <div className="manage-buttons">
                         <button className="view-product" title="Product Image" onClick={()=>toggleModel("view")}><BsFillImageFill size="1.5rem"/></button>
