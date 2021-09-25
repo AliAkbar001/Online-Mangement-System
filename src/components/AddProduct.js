@@ -4,7 +4,7 @@ import { productURL,productImage } from '../fetch_data/apiUrl';
 export default function AddProduct() {
 
 const [productCode, setProductCode] = useState("");
-const [productImages, setProductImages] = useState(productImage + "/ph.png");
+const [productImages, setProductImages] = useState(productImage + "ph.png");
 
 function handleChange(e){
     var name = e.target.name;
@@ -40,6 +40,7 @@ function onSubmit(e){
                     <div>
                     <label>Product Code</label>
                     <input type="text" name="_id" value={productCode} onChange={handleChange} required/>
+                    <input type="text" name="action" value="add" hidden/>
                     </div>
                     <div>
                     <label>Select Image</label>

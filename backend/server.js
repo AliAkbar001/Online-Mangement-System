@@ -36,6 +36,7 @@ app.get("/api/products/image/:name", async (req, res) => {
     res.sendFile(path.join(__dirname,`./images/${req.params.name}`))
     })
 
+
 app.post("/api/products", upload.single('product_image'),async (req, res) => {
 
     const name = req.body.name===''?"none":req.body.name;
@@ -45,8 +46,9 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
     const quantity = req.body.quantity===''?0:parseInt(req.body.quantity);
     const company = req.body.company===''?"none":req.body.company;
     const expiry_date = !req.body.expiry_date?"none":req.body.expiry_date;
+    const action = req.body.action;
 
-    const product = {
+    var product = {
         _id: req.body._id,
         name: name,
         category:category,
@@ -57,13 +59,25 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
         company:company,
         expiry_date:expiry_date,
     }
-    await collection.insertOne(product,function(err, data) {
-        if (err) {
-            res.send(err) 
-          } else {
-            res.send(data)
-          }
-    });
+    if(action === "add"){
+        product = {...product,sold_quantity:0}
+        await collection.insertOne(product,function(err, data) {
+            if (err) {
+                res.send(err) 
+              } else {
+                res.send(data)
+              }
+        });
+    }else if(action === "update"){
+        await collection.upsert({_id:product._id},{$set:product},{upsert: true},function(err, data) {
+            if (err) {
+                res.send(err) 
+              } else {
+                res.send(data)
+              }
+        });
+    }
+   
 })
 
 app.listen(5001, () => {

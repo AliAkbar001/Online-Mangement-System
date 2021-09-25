@@ -3,7 +3,7 @@ import {AiFillDelete} from "react-icons/ai";
 import {FaEdit} from "react-icons/fa";
 import {BsFillImageFill} from "react-icons/bs";
 import {AiFillCloseCircle} from "react-icons/ai";
-import { productURL } from '../fetch_data/apiUrl';
+import { productURL,productImage} from '../fetch_data/apiUrl';
 import Progressbar from './Progressbar';
 
 export default function ManageProducts() {
@@ -11,6 +11,8 @@ export default function ManageProducts() {
     const [data, setData] = useState(false);
     const [form, setForm] = useState(false);
     const [getData, setGetData] = useState(false);
+    const [displayData, setDisplayData] = useState(false);
+    const [productPhoto, setProductPhoto] = useState(productImage + "ph.png");
 
     useEffect(() => {
     fetch(productURL)
@@ -25,7 +27,8 @@ export default function ManageProducts() {
     )
     },[]);
       
-    function toggleModel(e){
+    function toggleModel(e,product){
+        setDisplayData(product);
         if(e==="view"){
             data ? setData(false) : setData(true);
         }else if(e==="form"){
@@ -33,8 +36,30 @@ export default function ManageProducts() {
         }
         
     }
+    function handleChange(e){
+        const name = e.target.name;
+        var value = e.target.value;
+        setDisplayData({...displayData,[name]:value});
+        
+    }
     function handleClick(e){
         setSearchBy(e.target.value);
+    }
+    function onSubmit(e){
+        e.preventDefault();
+            const formData = new FormData(document.getElementById("product-form"));
+            fetch(productURL,{
+                body: formData,
+                method: "post"
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if(data.upsertedCount > 0){
+                    console.log("Product Update Successfully");
+                }else{
+                    console.log("Error Found")
+                }
+            })
     }
     return (
         <div className="manage-products">
@@ -62,122 +87,127 @@ export default function ManageProducts() {
                     <option value="expire_date">Expiry Date 0-1</option>
                 </select>
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Code</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Purchase Price(RS)</th>
-                        <th scope="col">Selling Price(RS)</th>
-                        <th scope="col">Available Quantity</th>
-                        <th scope="col">Company</th>
-                        <th scope="col">Expire Date</th>
-                        <th colSpan="2" scope="col">Options</th>
-                    </tr>
-            </thead>
-            <tbody>
-            {getData ?  (getData.map(product =>(
-                    <tr key={product._id}>
-                    <td data-label="Code">{product._id}</td>
-                    <td data-label="Name">{product.name}</td>
-                    <td data-label="Category">{product.category}</td>
-                    <td data-label="Purchase Price(RS)">{product.purchase_price}</td>
-                    <td data-label="Selling Price(RS)">{product.selling_price}</td>
-                    <td data-label="Available Quantity">{product.quantity}</td>
-                    <td data-label="Company">{product.company}</td>
-                    <td data-label="Expire Date">{product.expiry_date}</td>
-                    <td data-label="Options">
-                    <div className="manage-buttons">
-                        <button className="view-product" title="Product Image" onClick={()=>toggleModel("view")}><BsFillImageFill size="1.5rem"/></button>
-                        <button className="update-product" title="Edit Product" onClick={()=>toggleModel("form")}><FaEdit size="1.5rem"/></button>
-                        <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
-                        </div>
-                    </td>
-                </tr>))):
-                <tr>
-                    <td colSpan="9"><Progressbar visibility={true}/></td>
-                </tr>}
-            </tbody>
-        </table>
+            { !getData ? <div><Progressbar visibility={true}/></div>:
+             <table className="table">
+             <thead>
+                 <tr>
+                     <th scope="col">Code</th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Category</th>
+                     <th scope="col">Purchase Price(RS)</th>
+                     <th scope="col">Selling Price(RS)</th>
+                     <th scope="col">Available Quantity</th>
+                     <th scope="col">Company</th>
+                     <th scope="col">Expire Date</th>
+                     <th colSpan="2" scope="col">Options</th>
+                 </tr>
+         </thead>
+         <tbody>
+         {getData ?  (getData.map(product =>(
+                 <tr key={product._id}>
+                 <td data-label="Code">{product._id}</td>
+                 <td data-label="Name">{product.name}</td>
+                 <td data-label="Category">{product.category}</td>
+                 <td data-label="Purchase Price(RS)">{product.purchase_price}</td>
+                 <td data-label="Selling Price(RS)">{product.selling_price}</td>
+                 <td data-label="Available Quantity">{product.quantity}</td>
+                 <td data-label="Company">{product.company}</td>
+                 <td data-label="Expire Date">{product.expiry_date}</td>
+                 <td data-label="Options">
+                 <div className="manage-buttons">
+                     <button className="view-product" title="Product Image" onClick={()=>toggleModel("view",product)}><BsFillImageFill size="1.5rem"/></button>
+                     <button className="update-product" title="Edit Product" onClick={()=>toggleModel("form",product)}><FaEdit size="1.5rem"/></button>
+                     <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
+                     </div>
+                 </td>
+             </tr>))):
+             <tr>
+                 <td colSpan="9"><Progressbar visibility={true}/></td>
+             </tr>}
+         </tbody>
+     </table> }
+           
         {data && (
         <div className="popup-container">
             <div className="popup">
+                { displayData && (
                 <div className="product-details">
-                    <img src="https://images.unsplash.com/photo-1630327064614-4e74d61f2a24?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzNHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dress 5"/>
+                    <img src={productImage + (displayData.product_image !== "none" ? displayData.product_image : "ph.png")} alt={displayData.product_image}/>
                     <div>
-                        <h4>Name: <span>0</span></h4>
-                        <h4>Product Code: <span>0</span></h4>
-                        <h4>Category: <span>0</span></h4>
-                        <h4>Company: <span>0</span></h4>
-                        <h4>Sold Quantity: <span>0</span></h4>
-                        <h4>Available Quantity: <span>0</span></h4>
-                        <h4>Total Quantity: <span>0</span></h4>
-                        <h4>Image Name: <span>0</span></h4>
-                        <h4>Purchase Price: <span>0</span></h4>
-                        <h4>Selling Price: <span>0</span></h4>
-                        <h4>Sold Quantity: <span>0</span></h4>
-                        <h4>Expiry Date: <span>0</span></h4>
+                        <h4>Name: <span>{displayData.name}</span></h4>
+                        <h4>Product Code: <span>{displayData._id}</span></h4>
+                        <h4>Category: <span>{displayData.category}</span></h4>
+                        <h4>Company: <span>{displayData.company}</span></h4>
+                        <h4>Sold Quantity: <span>{displayData.sold_quantity}</span></h4>
+                        <h4>Available Quantity: <span>{displayData.quantity}</span></h4>
+                        <h4>Image Name: <span>{displayData.product_image}</span></h4>
+                        <h4>Purchase Price: <span>{displayData.purchase_price}</span></h4>
+                        <h4>Selling Price: <span>{displayData.selling_price}</span></h4>
+                        <h4>Expiry Date: <span>{displayData.expiry_date}</span></h4>
                     </div>
                     <span className="close-product"><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel("view")}/></span>
                     <button onClick={()=>toggleModel("view")}>Close</button>
                 </div>
+                )}
             </div>
         </div>
         )}
         {form && (
+            displayData && (
         <div className="popup-container">
             <div className="popup">
                 <h2>Edit Product</h2>
                 <div className="form-modal">
-                    <form className="product-data-form">
+                    <form className="product-data-form" onSubmit={onSubmit} autoComplete="off" encType="multipart/form-data" id="product-form">
                     <div>
                     <label>Product Code</label>
-                    <input type="text" name="product_code" disabled/>
-                    </div>
-                    <div>
-                    <label>Select Image</label>
-                    <input type="file" accept="image/*" name="image_url"/>
+                    <input type="text" name="product_code" value={displayData._id} disabled/>
+                    <input type="text" name="product_code" value={displayData._id} hidden/>
+                    <input type="text" name="action" value="update" hidden/>
                     </div>
                     <div>
                     <label>Product Name</label>
-                    <input type="text" name="name" required/>
+                    <input type="text" name="name" value={displayData.name} onChange={handleChange}/>
+                    </div>
+                    <div>
+                    <label>Select Image</label>
+                    <input type="file" accept="image/*" name="product_image" onChange={handleChange}/>
                     </div>
                     <div>
                     <label>Category</label>
-                    <input type="text" name="category" required/>
+                    <input type="text" name="category" value={displayData.category} onChange={handleChange}/>
                     </div>
                     <div>
                     <label>Purchase Price(RS)</label>
-                    <input type="number"  min="0" name="purchase_price" required/>
+                    <input type="number"  min="0" name="purchase_price" value={displayData.purchase_price} onChange={handleChange}/>
                     </div>
                     <div>
                     <label>Selling Price(RS)</label>
-                    <input type="number"  min="0" name="selling_price"/>
+                    <input type="number"  min="0" name="selling_price" value={displayData.selling_price} onChange={handleChange}/>
                     </div>
                     <div>
                     <label>Quantity</label>
-                    <input type="number"  min="0" name="quantity" required/>
+                    <input type="number"  min="0" name="quantity" value={displayData.quantity} onChange={handleChange} required/>
                     </div>
                     <div>
                     <label>Company</label>
-                    <input type="text" name="company" required/>
+                    <input type="text" name="company" value={displayData.company} onChange={handleChange}/>
                     </div>
                     <div>
                     <label>Expire Date</label>
-                    <input type="date" name="expire_date" required/>
+                    <input type="date" name="expire_date"value={displayData.expiry_date} onChange={handleChange}/>
                     </div>
                     <div>
                     <button type="submit">Edit Product</button>
                     </div> 
                     </form>
-                    <img src="https://images.unsplash.com/photo-1553272725-086100aecf5e?ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw3Mnx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Dress 6"/>
+                    <img src={productImage + (displayData.product_image !== "none" ? displayData.product_image : "ph.png")} alt={displayData.product_image}/>
                     <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel("form")}/></span>
                     <button className="close-product" onClick={()=>toggleModel("form")}>Close</button>
                 </div>
             </div>
         </div>
-        )}
+        ))}
         </div>
     )
 }
