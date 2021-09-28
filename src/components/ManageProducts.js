@@ -8,11 +8,13 @@ import Progressbar from './Progressbar';
 
 export default function ManageProducts() {
     const [searchBy, setSearchBy] = useState("Code");
-    const [data, setData] = useState(false);
-    const [form, setForm] = useState(false);
+    const [viewProduct, setViewProduct] = useState(false);
+    const [editForm, setEditForm] = useState(false);
     const [getData, setGetData] = useState(false);
     const [displayData, setDisplayData] = useState(false);
-    const [productPhoto, setProductPhoto] = useState(productImage + "ph.png");
+    const [productPhoto, setProductPhoto] = useState(false);
+    const [deleteID, setDeleteID] = useState(false);
+    
 
     useEffect(() => {
     fetch(productURL)
@@ -25,14 +27,36 @@ export default function ManageProducts() {
             setGetData(error);
         }
     )
-    },[]);
+    },[displayData,deleteID]);
       
+    function deleteProduct(id){
+        const options = {
+          method: 'DELETE'
+        }
+        fetch(`${productURL}/${id}`, options)
+        .then(res => res.json())
+          .then(
+            (result) => {
+              setDeleteID(id);
+              console.log(result.delete);
+            },
+            (error) => {
+                console.log(error);
+            }
+          )
+    }
+
     function toggleModel(e,product){
         setDisplayData(product);
         if(e==="view"){
-            data ? setData(false) : setData(true);
+            viewProduct ? setViewProduct(false) : setViewProduct(true);
         }else if(e==="form"){
-            form ? setForm(false) : setForm(true);
+            if(editForm){
+                setEditForm(false) 
+                setProductPhoto(false)
+            }else{
+                setEditForm(true);
+            }    
         }
         
     }
@@ -40,8 +64,12 @@ export default function ManageProducts() {
         const name = e.target.name;
         var value = e.target.value;
         setDisplayData({...displayData,[name]:value});
-        
+        if(name === "product_image"){
+           if(e.target.files[0]!==""){
+                setProductPhoto(URL.createObjectURL(e.target.files[0]));
+        }
     }
+}
     function handleClick(e){
         setSearchBy(e.target.value);
     }
@@ -54,8 +82,9 @@ export default function ManageProducts() {
             })
             .then((res) => res.json())
             .then((data) => {
-                if(data.upsertedCount > 0){
+                if(data.matchedCount > 0){
                     console.log("Product Update Successfully");
+                    setDisplayData(false);
                 }else{
                     console.log("Error Found")
                 }
@@ -117,7 +146,7 @@ export default function ManageProducts() {
                  <div className="manage-buttons">
                      <button className="view-product" title="Product Image" onClick={()=>toggleModel("view",product)}><BsFillImageFill size="1.5rem"/></button>
                      <button className="update-product" title="Edit Product" onClick={()=>toggleModel("form",product)}><FaEdit size="1.5rem"/></button>
-                     <button className="delete-product" title="Delete Product"><AiFillDelete size="1.5rem"/></button>
+                     <button className="delete-product" title="Delete Product" onClick={()=>deleteProduct(product._id)}><AiFillDelete size="1.5rem"/></button>
                      </div>
                  </td>
              </tr>))):
@@ -127,7 +156,7 @@ export default function ManageProducts() {
          </tbody>
      </table> }
            
-        {data && (
+        {viewProduct && (
         <div className="popup-container">
             <div className="popup">
                 { displayData && (
@@ -152,7 +181,7 @@ export default function ManageProducts() {
             </div>
         </div>
         )}
-        {form && (
+        { editForm && (
             displayData && (
         <div className="popup-container">
             <div className="popup">
@@ -161,8 +190,8 @@ export default function ManageProducts() {
                     <form className="product-data-form" onSubmit={onSubmit} autoComplete="off" encType="multipart/form-data" id="product-form">
                     <div>
                     <label>Product Code</label>
-                    <input type="text" name="product_code" value={displayData._id} disabled/>
-                    <input type="text" name="product_code" value={displayData._id} hidden/>
+                    <input type="text" name="_id" value={displayData._id} disabled/>
+                    <input type="text" name="_id" value={displayData._id} hidden/>
                     <input type="text" name="action" value="update" hidden/>
                     </div>
                     <div>
@@ -195,13 +224,13 @@ export default function ManageProducts() {
                     </div>
                     <div>
                     <label>Expire Date</label>
-                    <input type="date" name="expire_date"value={displayData.expiry_date} onChange={handleChange}/>
+                    <input type="date" name="expiry_date"value={displayData.expiry_date} onChange={handleChange}/>
                     </div>
                     <div>
                     <button type="submit">Edit Product</button>
                     </div> 
                     </form>
-                    <img src={productImage + (displayData.product_image !== "none" ? displayData.product_image : "ph.png")} alt={displayData.product_image}/>
+                    <img src={!productPhoto ? (productImage + (displayData.product_image !== "none" ? displayData.product_image : "ph.png")):productPhoto} alt={displayData.product_image}/>
                     <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel("form")}/></span>
                     <button className="close-product" onClick={()=>toggleModel("form")}>Close</button>
                 </div>

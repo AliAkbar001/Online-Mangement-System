@@ -69,7 +69,7 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
               }
         });
     }else if(action === "update"){
-        await collection.upsert({_id:product._id},{$set:product},{upsert: true},function(err, data) {
+        await collection.updateOne({_id:req.body._id},{$set:product},{upsert: true},function(err, data) {
             if (err) {
                 res.send(err) 
               } else {
@@ -79,6 +79,18 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
     }
    
 })
+
+app.delete("/api/products/:id", async (req, res) => {
+    var msg = { }
+    const result = await collection.deleteOne({_id:req.params.id})
+    if(result.deletedCount>0){
+        msg = {delete:"Product Delete Successfully"}
+        res.send(msg)
+    }else{
+        msg = {delete:"Error Found"}
+        res.send(msg)
+    }
+    })
 
 app.listen(5001, () => {
     MongoClient.connect(CONNECTION_URL, { 
