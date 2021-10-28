@@ -1,10 +1,24 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { productURL,productImage } from '../fetch_data/apiUrl';
 
 export default function AddProduct() {
 
 const [productCode, setProductCode] = useState("");
 const [productImages, setProductImages] = useState(productImage + "ph.png");
+const [getData, setGetData] = useState(false);
+
+useEffect(() => {
+    fetch(productURL)
+    .then(res => res.json())
+    .then(
+        (result)=>{
+            setGetData(result);
+            },
+        (error) => {
+            setGetData(error);
+        }
+    )
+    },[]);
 
 function handleChange(e){
     var name = e.target.name;
@@ -18,6 +32,7 @@ function handleChange(e){
 
 function onSubmit(e){
     e.preventDefault();
+    getData && getData.map((product)=> ( productCode === product._id && alert("This code is added")));
         const formData = new FormData(document.getElementById("product-form"));
         fetch(productURL,{
             body: formData,
@@ -26,9 +41,9 @@ function onSubmit(e){
         .then((res) => res.json())
         .then((data) => {
             if(data.insertedId === productCode){
-                console.log("Product Add Successfully");
+                alert("Product Add Successfully");
             }else{
-                console.log("Error Found")
+                alert("Error Found")
             }
         })
 }
@@ -48,19 +63,19 @@ function onSubmit(e){
                     </div>
                     <div>
                     <label>Product Name</label>
-                    <input type="text" name="name"/>
+                    <input type="text" name="name" required/>
                     </div>
                     <div>
                     <label>Category</label>
-                    <input type="text" name="category"/>
+                    <input type="text" name="category" required/>
                     </div>
                     <div>
                     <label>Purchase Price(RS)</label>
-                    <input type="number"  min="0" name="purchase_price"/>
+                    <input type="number"  min="0" name="purchase_price" />
                     </div>
                     <div>
                     <label>Selling Price(RS)</label>
-                    <input type="number"  min="0" name="selling_price"/>
+                    <input type="number"  min="0" name="selling_price" required/>
                     </div>
                     <div>
                     <label>Quantity</label>

@@ -83,10 +83,10 @@ export default function ManageProducts() {
             .then((res) => res.json())
             .then((data) => {
                 if(data.matchedCount > 0){
-                    console.log("Product Update Successfully");
+                    alert("Product Update Successfully");
                     setDisplayData(false);
                 }else{
-                    console.log("Error Found")
+                    alert("Error Found")
                 }
             })
     }
@@ -196,7 +196,7 @@ export default function ManageProducts() {
                     </div>
                     <div>
                     <label>Product Name</label>
-                    <input type="text" name="name" value={displayData.name} onChange={handleChange}/>
+                    <input type="text" name="name" value={displayData.name} onChange={handleChange} required/>
                     </div>
                     <div>
                     <label>Select Image</label>
@@ -208,11 +208,11 @@ export default function ManageProducts() {
                     </div>
                     <div>
                     <label>Purchase Price(RS)</label>
-                    <input type="number"  min="0" name="purchase_price" value={displayData.purchase_price} onChange={handleChange}/>
+                    <input type="number"  min="0" name="purchase_price" value={displayData.purchase_price} onChange={handleChange} required/>
                     </div>
                     <div>
                     <label>Selling Price(RS)</label>
-                    <input type="number"  min="0" name="selling_price" value={displayData.selling_price} onChange={handleChange}/>
+                    <input type="number"  min="0" name="selling_price" value={displayData.selling_price} onChange={handleChange} required/>
                     </div>
                     <div>
                     <label>Quantity</label>
