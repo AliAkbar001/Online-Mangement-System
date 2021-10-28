@@ -95,17 +95,35 @@ app.delete("/api/products/:id", async (req, res) => {
     app.post("/api/bill", async (req, res) => {
         if(req){
             var data = req.body;
-            await data.map((a)=>(
-                collection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err, data) {
-                    if (err) {
-                        res.send(err) 
-                    } else {
-                        res.send(data)
-                    }
-                })
+            var totalAmount = 0;
+            data.map(a => totalAmount = totalAmount + a.selling_price);
+            var today = new Date();
+            var date = today.getFullYear() + '-'+(today.getMonth()+1) + '-' + today.getDate();
+            var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var bill = {
+                date: date,
+                time: time,
+                products: data,
+                total_amount: totalAmount
+            };
+            await database.collection('bill').insertOne(bill,function(err1, data1) {
+                if (err1) {
+                    res.send(err1) 
+                  } else {   
+                data.map((a)=>(
+                    collection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err2, data2) {
+                        if (err2) {
+                            res.send(err2) 
+                        } else {
+                            bill = {_id:data1.insertedId,...bill}
+                            const response = {bill,data2}
+                            res.send(response)
+                        }
+                    })
                ))
+            }
+        });
         }
-       console.log(req.body);
     })
       
 app.listen(5001, () => {
