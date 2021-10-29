@@ -25,10 +25,10 @@ app.use((req, res, next) => {
     res.append('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
-var database, collection;
+var database, productCollection;
 
 app.get("/api/products", async (req, res) => {
-const result = await collection.find({}).sort({$natural:-1}).toArray();
+const result = await productCollection.find({}).sort({$natural:-1}).toArray();
 res.send(result)
 })
 
@@ -61,7 +61,7 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
     }
     if(action === "add"){
         product = {...product,sold_quantity:0}
-        await collection.insertOne(product,function(err, data) {
+        await productCollection.insertOne(product,function(err, data) {
             if (err) {
                 res.send(err) 
               } else {
@@ -69,7 +69,7 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
               }
         });
     }else if(action === "update"){
-        await collection.updateOne({_id:req.body._id},{$set:product},function(err, data) {
+        await productCollection.updateOne({_id:req.body._id},{$set:product},function(err, data) {
             if (err) {
                 res.send(err) 
               } else {
@@ -82,7 +82,7 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
 
 app.delete("/api/products/:id", async (req, res) => {
     var msg = { }
-    const result = await collection.deleteOne({_id:req.params.id})
+    const result = await productCollection.deleteOne({_id:req.params.id})
     if(result.deletedCount>0){
         msg = {delete:"Product Delete Successfully"}
         res.send(msg)
@@ -106,23 +106,47 @@ app.delete("/api/products/:id", async (req, res) => {
                 products: data,
                 total_amount: totalAmount
             };
-            await database.collection('bill').insertOne(bill,function(err1, data1) {
+             database.collection('bill').insertOne(bill,function(err1, data1) {
                 if (err1) {
                     res.send(err1) 
                   } else {   
                 data.map((a)=>(
-                    collection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err2, data2) {
+                    productCollection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err2, data2) {
                         if (err2) {
                             res.send(err2) 
                         } else {
                             bill = {_id:data1.insertedId,...bill}
                             const response = {bill,data2}
-                            res.send(response)
+                            var dailyData = {
+                                date:date,
+                                day:today.getDate(),
+                                month:today.getMonth()+1,
+                                year:today.getFullYear(),
+                                billData:[{
+                                    _id:data1.insertedId,
+                                    total_amount:totalAmount
+                                }],
+                                total_amount:totalAmount
+                           }
+                            database.collection('day').updateOne({date:date},{
+                                $push:{billData:{_id:data1.insertedId,total_amount:totalAmount}},$inc:{total_amount:+totalAmount}
+                            },function(err3, data3) {
+                                if (err3) {
+                                    res.send(err3) 
+                                } else {
+                                    if(data3.modifiedCount === 0){
+                                         database.collection('day').insertOne(dailyData);
+                                    }
+                                     res.send(response);
+                                }
+                            });
+                            
                         }
                     })
                ))
             }
         });
+        
         }
     })
       
@@ -133,7 +157,7 @@ app.listen(5001, () => {
             throw error;
         }
         database = client.db(DATABASE_NAME);
-        collection = database.collection("products");
+        productCollection = database.collection("products");
         console.log(`Server is start http://localhost:5001/`);
     });
 });

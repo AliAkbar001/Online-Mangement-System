@@ -39,6 +39,7 @@ export default function Home() {
                 console.log(result);
                 handleVariables();
                 setBill(false);
+                setTotalAmount(0);
                 setRefresh(!refresh);
             },(error) => {
                 console.log(error);
