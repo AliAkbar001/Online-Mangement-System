@@ -5,7 +5,7 @@ const BodyParser = require("body-parser");
 const CONNECTION_URL = "mongodb+srv://ali:ali7676@cluster0.ozphx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const DATABASE_NAME = "online_mangement_system";
 const multer = require('multer')
-var getFilename = "none";
+var getFilename = "ph.png";
 const storage = multer.diskStorage({
     destination: function(req, file, cd){
         cd(null, './images')
@@ -33,7 +33,7 @@ res.send(result)
 })
 
 app.get("/api/products/image/:name", async (req, res) => {
-    res.sendFile(path.join(__dirname,`./images/${req.params.name}`))
+    return res.sendFile(path.join(__dirname,`./images/${req.params.name}`))
     })
 
 
@@ -63,17 +63,17 @@ app.post("/api/products", upload.single('product_image'),async (req, res) => {
         product = {...product,sold_quantity:0}
         await productCollection.insertOne(product,function(err, data) {
             if (err) {
-                res.send(err) 
+                return res.send(err) 
               } else {
-                res.send(data)
+                return res.send(data)
               }
         });
     }else if(action === "update"){
         await productCollection.updateOne({_id:req.body._id},{$set:product},function(err, data) {
             if (err) {
-                res.send(err) 
+                return res.send(err) 
               } else {
-                res.send(data)
+                return res.send(data)
               }
         });
     }
@@ -85,10 +85,10 @@ app.delete("/api/products/:id", async (req, res) => {
     const result = await productCollection.deleteOne({_id:req.params.id})
     if(result.deletedCount>0){
         msg = {delete:"Product Delete Successfully"}
-        res.send(msg)
+        return res.send(msg)
     }else{
         msg = {delete:"Error Found"}
-        res.send(msg)
+        return res.send(msg)
     }
     })
 
@@ -106,44 +106,53 @@ app.delete("/api/products/:id", async (req, res) => {
                 products: data,
                 total_amount: totalAmount
             };
+            var check = false;
              database.collection('bill').insertOne(bill,function(err1, data1) {
                 if (err1) {
-                    res.send(err1) 
+                    return res.send(err1) 
                   } else {   
-                data.map((a)=>(
-                    productCollection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err2, data2) {
+                    var dailyData = {
+                        date:date,
+                        day:today.getDate(),
+                        month:today.getMonth()+1,
+                        year:today.getFullYear(),
+                        billData:[{
+                            _id:data1.insertedId,
+                            total_amount:totalAmount
+                        }],
+                        total_amount:totalAmount
+                   }
+                    database.collection('day').updateOne({date:date},{
+                        $push:{billData:{_id:data1.insertedId,total_amount:totalAmount}},$inc:{total_amount:+totalAmount}
+                    },function(err2, data2) {
                         if (err2) {
-                            res.send(err2) 
+                            return res.send(err2) 
                         } else {
-                            bill = {_id:data1.insertedId,...bill}
-                            const response = {bill,data2}
-                            var dailyData = {
-                                date:date,
-                                day:today.getDate(),
-                                month:today.getMonth()+1,
-                                year:today.getFullYear(),
-                                billData:[{
-                                    _id:data1.insertedId,
-                                    total_amount:totalAmount
-                                }],
-                                total_amount:totalAmount
-                           }
-                            database.collection('day').updateOne({date:date},{
-                                $push:{billData:{_id:data1.insertedId,total_amount:totalAmount}},$inc:{total_amount:+totalAmount}
-                            },function(err3, data3) {
-                                if (err3) {
-                                    res.send(err3) 
-                                } else {
-                                    if(data3.modifiedCount === 0){
-                                         database.collection('day').insertOne(dailyData);
-                                    }
-                                     res.send(response);
-                                }
-                            });
-                            
+                            if(data2.modifiedCount === 0){
+                                 database.collection('day').insertOne(dailyData,function(err3, data3) {
+                                    if (err3) {
+                                        return res.send(err3) 
+                                   }else{
+                                        check = true;
+                                   }
+                                });
+                            }else{
+                                check = true;
+                            }
+                            if(check){
+                                data.map((a)=>(
+                                    productCollection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err4, data4) {
+                                        if (err4) {
+                                            return res.send(err4) 
+                                        }
+                                    })
+                                ))
+                                bill = {_id:data1.insertedId,...bill}
+                                return res.send(bill);
+                            }
                         }
-                    })
-               ))
+                    });
+               
             }
         });
         

@@ -1,9 +1,10 @@
 import React,{useState, useEffect} from 'react';
 import {AiFillDelete} from "react-icons/ai";
-import { productURL,billURL} from '../fetch_data/apiUrl';
+import { productURL,billURL,productImage} from '../fetch_data/apiUrl';
 
 export default function Home() {
     const [bill, setBill] = useState(false);
+    const [billDetails, setBillDetails] = useState(false);
     const [getData, setGetData] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [productCode, setProductCode] = useState("");
@@ -12,6 +13,7 @@ export default function Home() {
     const [productSellingPrice, setProductSellingPrice] = useState(0);
     const [availableQuantity, setAvailableQuantity] = useState(0);
     const [sellingQuantity, setSellingQuantity] = useState(0);
+    const [productPhoto, setProductPhoto] = useState("ph.png");
     const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
@@ -27,7 +29,8 @@ export default function Home() {
         )
         },[refresh]);
 
-    function handleBill(){
+    function handleBill(print){
+        console.log(bill);
         const options = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -36,7 +39,18 @@ export default function Home() {
         fetch(billURL, options)
         .then(res => res.json())
             .then((result) => {
-                console.log(result);
+                setBillDetails(result);
+                if(print){
+                    var content = document.getElementById("bill-table");
+                    var pri = document.getElementById("print-bill").contentWindow;
+                    pri.document.open();
+                    pri.document.write(content.innerHTML);
+                    pri.document.close();
+                    pri.focus();
+                    pri.print();
+                }else{
+                    alert("Bill Add Successfully");
+                }
                 handleVariables();
                 setBill(false);
                 setTotalAmount(0);
@@ -47,14 +61,30 @@ export default function Home() {
     }
     function handleChange(e){
         var value = e.target.value;
-        getData &&  getData.filter((product)=>(
-            (product.name === value)||(product._id === value))&&(
-                setProductCode(product._id),
-                setProductName(product.name),
-                setAvailableQuantity(product.quantity),
-                setProductPurchasePrice(product.purchase_price),
-                setProductSellingPrice(product.selling_price)
-            ));
+        var name = e.target.name;
+        if(name === "_id"){
+            setProductCode(value);
+            getData &&  getData.filter((product)=>(
+                (product._id === value))&&(
+                    setProductCode(product._id),
+                    setProductName(product.name),
+                    setAvailableQuantity(product.quantity),
+                    setProductPurchasePrice(product.purchase_price),
+                    setProductSellingPrice(product.selling_price),
+                    setProductPhoto(product.product_image)
+                ));
+        }else if(name === "name"){
+            setProductName(value);
+            getData &&  getData.filter((product)=>(
+                (product.name === value))&&(
+                    setProductCode(product._id),
+                    setProductName(product.name),
+                    setAvailableQuantity(product.quantity),
+                    setProductPurchasePrice(product.purchase_price),
+                    setProductSellingPrice(product.selling_price),
+                    setProductPhoto(product.product_image)
+                ));
+        }
 
     }
 
@@ -72,6 +102,8 @@ export default function Home() {
         setProductSellingPrice(0);
         setAvailableQuantity(0);
         setSellingQuantity(0);
+        setProductPhoto("ph.png")
+
     }
     function handleSubmit(e){
         e.preventDefault();
@@ -125,7 +157,7 @@ export default function Home() {
             <div className="home-add-product">
                 <p>Add Product</p>
                 <div className="home-img-form">
-                <img src="https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80" alt="ProductImage"/>
+                <img src={productImage+productPhoto} alt={productPhoto}/>
                 <form onSubmit={handleSubmit}>
                     <label>Code:</label>
                     <input type="text" list="product-code" value={productCode} name="_id" onChange={handleChange} required/>
@@ -164,8 +196,8 @@ export default function Home() {
                 </div>
             </div>
             <div className="home-table">
-                <button>Save & Print</button>
-                <button onClick={handleBill}>Save</button>
+                <button onClick={()=>handleBill(true)}>Save & Print</button>
+                <button onClick={()=>handleBill(false)}>Save</button>
                 <table className="table">
                     <thead>
                     <tr>
@@ -193,6 +225,39 @@ export default function Home() {
                 </tbody>
                 </table>
             </div>
+            {billDetails && (   
+            <iframe id="print-bill" style={{display:"none"}} title="Online Management System">
+          <div  id="bill-table"  style={{display:"none",width:"100%"}}>
+             <h1>MAMA MAX: <h3>{billDetails._id}</h3></h1>
+         <table style={{border:"1px solid black",padding:"0.5em",fontSize:"25px",textAlign:"center",borderCollapse: "collapse"}}>
+                <thead>
+                <tr>
+                    <th style={{border:"1px solid black",padding:"0.3em"}}>Name</th>
+                    <th style={{border:"1px solid black",padding:"0.3em"}}>Quantity</th>
+                    <th style={{border:"1px solid black",padding:"0.3em"}}>Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                {bill!="" ? (bill.map((product) =>(
+            <tr key={product._id}>
+            <td style={{border:"1px solid black",padding:"0.3em"}}>{product.name}</td>
+            <td style={{border:"1px solid black",padding:"0.3em"}}>{product.quantity}</td>
+            <td style={{border:"1px solid black",padding:"0.3em"}}>{product.selling_price}</td>
+        </tr>
+        ))):<div className="no-data-found">Empty</div>}              
+                    <tr>
+                        <td colSpan="2" style={{border:"1px solid black",padding:"0.3em"}}>Total</td>
+                        <td colSpan="2" style={{border:"1px solid black",padding:"0.3em"}}>{billDetails.total_amount}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Name: ...</p>
+             <p>Phone: ...</p>
+             <p>Location : ...</p>
+             <p>Instagram: ...</p>
+         </div>
+         </iframe>
+         )}
         </div>
     )
 }
