@@ -165,33 +165,28 @@ app.delete("/api/products/:id", async (req, res) => {
     app.post("/api/bill/delete", async (req, res) => {
         const data = req.body;
         var bill_id = mongoose.Types.ObjectId(data._id);
-        data.products.map((a)=>(
+        await data.products.map((a)=>(
             productCollection.updateOne({_id:a._id},{$inc:{sold_quantity: - a.quantity, quantity:a.quantity}},function(err1, data1) {
                 if (err1) {
                     return res.send(err1) 
-                }else{
-                    console.log("Product Update Successfully")
                 }
             })
         ))
-        database.collection('day').updateOne({data:data.date},
-            {$pull:{billData:{_id:bill_id}},$inc:{total_amount:-data.total_amount},function(err2,data2){
-                if(err2){
-                    console.log(err2) 
-                }else{
-                    console.log("Data Pull ",data2);
-                }
-            }})
-        database.collection('bill').deleteOne({_id:bill_id},function(err3,data3){
-            if(data3.deletedCount>0){
-                console.log("Bill Delete Successfully")
-                return res.send({msg:"Bill Delete Successfully"})
-            }else{
-                console.log(data3)
-                return res.send({msg:data3})
+        await database.collection('day').findOneAndUpdate({date:data.date},
+            {$pull:{billData:{_id:bill_id}},$inc:{total_amount:-data.total_amount}}
+            ,function(err2, data2) {
+            if (err2) {
+                return res.send(err2) 
+            } 
+        })
+        await database.collection('bill').deleteOne({_id:bill_id},function(err3,data3){
+            if (err3) {
+                return res.send(err3) 
             }
         })
+        return res.send({msg:"Bill Delete Successfully"});     
     })
+    
 app.listen(5001, () => {
     MongoClient.connect(CONNECTION_URL, { 
         useNewUrlParser: true}, (error, client) => {

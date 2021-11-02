@@ -5,6 +5,8 @@ export default function BillRecords() {
     const [data, setData] = useState(false);
     const [getData, setGetData] = useState(false);
     const [billDetails, setBillDetails] = useState(false);
+    const [searchBill, setSearchBill] = useState("");
+    const [searchType, setSearchType] = useState("_id");
     const [refresh, setRefresh] = useState(false);
 
     function toggleModel(billID){
@@ -16,7 +18,6 @@ export default function BillRecords() {
         .then(res => res.json())
         .then(
             (result)=>{
-                console.log(result);
                 setGetData(result);
                 },
             (error) => {
@@ -35,18 +36,42 @@ export default function BillRecords() {
         fetch(`${billURL}/delete`, options)
         .then(res => res.json())
             .then((result) => {
+                alert(result.msg);
                 setRefresh(!refresh);
             },(error) => {
                 console.log(error);
         });
     }
+
+    function handleClick(e){
+        if(e.target.name === "search_id"){
+            setSearchType("_id");
+            setSearchBill(e.target.value);
+        }else if(e.target.name === "search_date"){
+            setSearchType("date");
+            setSearchBill(e.target.value);
+        }
+    }
     return (
         <div className="bill-record">
             <div className="bill-record-top-bar">
-            <input type="search" placeholder="Bill Number"/>
-            <input type="date" placeholder="Select Date"/>
+            <input type="search" name="search_id" value={searchBill} onChange={handleClick} placeholder="Bill Number"/>
+            <input type="date" name="search_date" onChange={handleClick} placeholder="Select Date"/>
             </div>
-            {getData && getData.map(bill =>
+            {searchBill?(getData.filter((bill)=> bill[searchType].toString().indexOf(searchBill.toLowerCase())>-1).map(bill =>( 
+             <div className="bill-record-data">
+             <div>
+                 <h3>{bill._id}</h3>
+                 <div className="border-line"></div>
+                 <h3>{bill.total_amount}</h3>
+             </div>
+             <div className="bill-record-buttons">
+                 <button onClick={()=>toggleModel(bill._id)}>VIEW</button>
+                 <button>Print</button>
+                 <button className="delete-btn" onClick={()=>handleDeletion(bill)}>Delete</button>
+             </div>
+         </div>
+        ))) : (getData && getData.map(bill =>
             <div className="bill-record-data">
                 <div>
                     <h3>{bill._id}</h3>
@@ -59,7 +84,7 @@ export default function BillRecords() {
                     <button className="delete-btn" onClick={()=>handleDeletion(bill)}>Delete</button>
                 </div>
             </div>
-            )}
+            ))}
             {data && (
                 billDetails && (
             <div className="popup-container">

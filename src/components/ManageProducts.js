@@ -7,9 +7,12 @@ import { productURL,productImage} from '../fetch_data/apiUrl';
 import Progressbar from './Progressbar';
 
 export default function ManageProducts() {
-    const [searchBy, setSearchBy] = useState("Code");
     const [viewProduct, setViewProduct] = useState(false);
     const [editForm, setEditForm] = useState(false);
+    const [sortData, setSortData] = useState(false);
+    const [searchData, setSearchData] = useState("");
+    const [searchCategory, setSearchCategory] = useState("_id");
+    const [searchBy, setSearchBy] = useState("Code");
     const [getData, setGetData] = useState(false);
     const [displayData, setDisplayData] = useState(false);
     const [productPhoto, setProductPhoto] = useState(false);
@@ -21,13 +24,33 @@ export default function ManageProducts() {
     .then(res => res.json())
     .then(
         (result)=>{
-            setGetData(result);
+            console.log(sortData);
+            var data =  result.sort((a, b) => {
+                if(sortData === "_id"||sortData === "code"){
+                    return parseInt(b.id) - parseInt(a.id);
+                }else if(sortData === "name"){
+                    return a.name.localeCompare(b.name);
+                }else if(sortData === "company"){
+                    return a.company.localeCompare(b.company);
+                }else if(sortData === "category"){
+                    return a.category.localeCompare(b.category);
+                }else if(sortData === "selling_price"){
+                    return parseInt(a.selling_price) - parseInt(b.selling_price);
+                }else if(sortData === "purchase_price"){
+                    return parseInt(a.purchase_price) - parseInt(b.purchase_price);
+                }else if(sortData === "quantity"){
+                    return parseInt(a.quantity) - parseInt(b.quantity);
+                }else if(sortData === "expiry_date"){
+                    return a.expiry_date.localeCompare(b.expiry_date);
+                }
+            });
+            setGetData(data);
             },
         (error) => {
             setGetData(error);
         }
     )
-    },[displayData,deleteID]);
+    },[displayData,deleteID,sortData]);
       
     function deleteProduct(id){
         const options = {
@@ -46,6 +69,7 @@ export default function ManageProducts() {
           )
     }
 
+
     function toggleModel(e,product){
         setDisplayData(product);
         if(e==="view"){
@@ -60,6 +84,7 @@ export default function ManageProducts() {
         }
         
     }
+
     function handleChange(e){
         const name = e.target.name;
         var value = e.target.value;
@@ -70,9 +95,30 @@ export default function ManageProducts() {
         }
     }
 }
-    function handleClick(e){
-        setSearchBy(e.target.value);
+function handleClick(e){
+    var value = e.target.value;
+    setSearchCategory(value);
+    if(value === "_id"){
+        setSearchBy("Code");
+    }else if(value === "selling_price"){
+        setSearchBy("Selling Price");
+    }else if(value === "name"){
+        setSearchBy("Name");
+    }else if(value==="company"){
+        setSearchBy("Company");
+    }else if(value==="category"){
+        setSearchBy("Category");
+    }else if(value==="quantity"){
+        setSearchBy("Quantity");
+    }else if(value==="purchase_price"){
+        setSearchBy("Purchase Price");
+    }else if(value==="sold_quantity"){
+        setSearchBy("Sold Quantity");
+    }else if(value==="expiry_date"){
+        setSearchBy("Expiry Date");
     }
+    
+}
     function onSubmit(e){
         e.preventDefault();
             const formData = new FormData(document.getElementById("product-form"));
@@ -93,27 +139,27 @@ export default function ManageProducts() {
     return (
         <div className="manage-products">
             <div className="manage-products-top">
-                <input type="search" placeholder={"Search Product By " + searchBy}/>
-                <select value={searchBy} onChange={handleClick}>
-                    <option value="Code">Code</option>
-                    <option value="Name">Name</option>
-                    <option value="Company">Company</option>
-                    <option value="Category">Category</option>
-                    <option value="Quantity">Quantity</option>
-                    <option value="Purchase Price">Purchase</option>
-                    <option value="Total Quantity">Sold Quantity</option>
-                    <option value="Expire Date">Expiry Date</option>
+                <input type="search" value={searchData} onChange={(e)=>setSearchData(e.target.value)} placeholder={"Search Product By " + searchBy}/>
+                <select onChange={handleClick}>
+                    <option value="_id">Code</option>
+                    <option value="name">Name</option>
+                    <option value="company">Company</option>
+                    <option value="category">Category</option>
+                    <option value="quantity">Quantity</option>
+                    <option value="purchase_price">Purchase Price</option>
+                    <option value="selling_price">Selling Price</option>
+                    <option value="expiry_date">Expiry Date</option>
                 </select>
-                <select>
+                <select onChange={(e)=>setSortData(e.target.value)}>
                     <option value="">--- Sort By ---</option>
-                    <option value="code">Code</option>
+                    <option value="_id">Code</option>
                     <option value="name">Name A-Z</option>
                     <option value="company">Company A-Z</option>
                     <option value="category">Category A-Z</option>
                     <option value="quantity">Quantity 0-1</option>
+                    <option value="selling_price">Selling Price 0-1</option>
                     <option value="purchase_price">Purchase Price 0-1</option>
-                    <option value="total_quantity">Sold Quantity 0-1</option>
-                    <option value="expire_date">Expiry Date 0-1</option>
+                    <option value="expiry_date">Expiry Date 0-1</option>
                 </select>
             </div>
             { !getData ? <div><Progressbar visibility={true}/></div>:
@@ -132,7 +178,25 @@ export default function ManageProducts() {
                  </tr>
          </thead>
          <tbody>
-         {getData ?  (getData.map(product =>(
+         {searchData!==""?(getData.filter((product)=> product[searchCategory].toString().indexOf(searchData.toLowerCase())>-1).map(product =>( 
+             <tr key={product._id}>
+             <td data-label="Code">{product._id}</td>
+             <td data-label="Name">{product.name}</td>
+             <td data-label="Category">{product.category}</td>
+             <td data-label="Purchase Price(RS)">{product.purchase_price}</td>
+             <td data-label="Selling Price(RS)">{product.selling_price}</td>
+             <td data-label="Available Quantity">{product.quantity}</td>
+             <td data-label="Company">{product.company}</td>
+             <td data-label="Expire Date">{product.expiry_date}</td>
+             <td data-label="Options">
+             <div className="manage-buttons">
+                 <button className="view-product" title="Product Image" onClick={()=>toggleModel("view",product)}><BsFillImageFill size="1.5rem"/></button>
+                 <button className="update-product" title="Edit Product" onClick={()=>toggleModel("form",product)}><FaEdit size="1.5rem"/></button>
+                 <button className="delete-product" title="Delete Product" onClick={()=>deleteProduct(product._id)}><AiFillDelete size="1.5rem"/></button>
+                 </div>
+             </td>
+            </tr>
+        ))) : (getData.map(product =>(
                  <tr key={product._id}>
                  <td data-label="Code">{product._id}</td>
                  <td data-label="Name">{product.name}</td>
@@ -149,10 +213,8 @@ export default function ManageProducts() {
                      <button className="delete-product" title="Delete Product" onClick={()=>deleteProduct(product._id)}><AiFillDelete size="1.5rem"/></button>
                      </div>
                  </td>
-             </tr>))):
-             <tr>
-                 <td colSpan="9"><Progressbar visibility={true}/></td>
-             </tr>}
+             </tr>)))
+    }
          </tbody>
      </table> }
            

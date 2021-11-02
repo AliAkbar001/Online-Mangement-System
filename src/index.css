@@ -104,12 +104,13 @@ select:focus{
   border: 2px solid rgb(34, 89, 134);
 }
 .popup-container{
-  position: absolute;
+  position: fixed;
   width: 100%;
   background-color:rgba(221, 221, 221, 0.582);
   top: 0;
   left: 0;
   z-index: 3;
+  overflow: hidden;
 }
 .popup{
   text-align: center;
@@ -519,5 +520,8 @@ select:focus{
     display: flex;
     flex-direction: column;
     text-align: left;
+  }
+  .popup-container{
+    position: absolute;
   }
 }

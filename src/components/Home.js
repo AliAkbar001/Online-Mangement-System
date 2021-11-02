@@ -5,14 +5,14 @@ import { productURL,billURL,productImage} from '../fetch_data/apiUrl';
 export default function Home() {
     const [bill, setBill] = useState(false);
     const [billDetails, setBillDetails] = useState(false);
-    const [getData, setGetData] = useState(false);
+    const [getData, setGetData] = useState([{_id:1,name:"Product1",selling_price:34,purchase_price:300,quantity:30}]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [productCode, setProductCode] = useState("");
     const [productName, setProductName] = useState("");
     const [productPurchasePrice, setProductPurchasePrice] = useState(0);
     const [productSellingPrice, setProductSellingPrice] = useState(0);
     const [availableQuantity, setAvailableQuantity] = useState(0);
-    const [sellingQuantity, setSellingQuantity] = useState(0);
+    const [sellingQuantity, setSellingQuantity] = useState(1);
     const [productPhoto, setProductPhoto] = useState("ph.png");
     const [refresh, setRefresh] = useState(false);
 
@@ -101,7 +101,7 @@ export default function Home() {
         setProductPurchasePrice(0);
         setProductSellingPrice(0);
         setAvailableQuantity(0);
-        setSellingQuantity(0);
+        setSellingQuantity(1);
         setProductPhoto("ph.png")
 
     }
