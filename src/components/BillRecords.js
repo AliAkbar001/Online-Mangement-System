@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {AiFillCloseCircle} from "react-icons/ai";
 import {billURL} from '../fetch_data/apiUrl';
+import Progressbar from './Progressbar';
 export default function BillRecords() {
     const [data, setData] = useState(false);
     const [getData, setGetData] = useState(false);
@@ -28,19 +29,22 @@ export default function BillRecords() {
 
     function handleDeletion(bill){
         console.log(bill);
-        const options = {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bill)
-        };
-        fetch(`${billURL}/delete`, options)
-        .then(res => res.json())
-            .then((result) => {
-                alert(result.msg);
-                setRefresh(!refresh);
-            },(error) => {
-                console.log(error);
-        });
+        const alertMsg = window.confirm(`Are you sure, you want to delete ${bill._id} bill`);
+        if(alertMsg){
+            const options = {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bill)
+            };
+            fetch(`${billURL}/delete`, options)
+            .then(res => res.json())
+                .then((result) => {
+                    alert(result.msg);
+                    setRefresh(!refresh);
+                },(error) => {
+                    console.log(error);
+            });
+        } 
     }
 
     function handleClick(e){
@@ -54,6 +58,8 @@ export default function BillRecords() {
     }
     return (
         <div className="bill-record">
+            { !getData ? <div><Progressbar visibility={true}/></div>:
+            <div>
             <div className="bill-record-top-bar">
             <input type="search" name="search_id" value={searchBill} onChange={handleClick} placeholder="Bill Number"/>
             <input type="date" name="search_date" onChange={handleClick} placeholder="Select Date"/>
@@ -81,6 +87,7 @@ export default function BillRecords() {
                 <div className="bill-record-buttons">
                     <button onClick={()=>toggleModel(bill._id)}>VIEW</button>
                     <button>Print</button>
+                    <button className="edit-btn">Edit</button>
                     <button className="delete-btn" onClick={()=>handleDeletion(bill)}>Delete</button>
                 </div>
             </div>
@@ -90,10 +97,11 @@ export default function BillRecords() {
             <div className="popup-container">
             <div className="popup">
                 <div className="bill-items-top">
+                <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/></span>
                     <h4>{billDetails.date}</h4>
                     <h4>{billDetails._id}</h4>
                     <h4>{billDetails.time}</h4>
-                    <span><AiFillCloseCircle size="1.7rem" onClick={()=>toggleModel()}/></span>
+                    
                 </div>
                 <div>
                 <table className="table">
@@ -124,6 +132,8 @@ export default function BillRecords() {
         </div>
         </div>
             ))}
+            </div>
+        }
         </div>
     )
 }

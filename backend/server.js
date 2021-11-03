@@ -103,7 +103,15 @@ app.delete("/api/products/:id", async (req, res) => {
             var totalAmount = 0;
             data.map(a => totalAmount = totalAmount + a.selling_price);
             var today = new Date();
-            var date = today.getFullYear() + '-'+(today.getMonth()+1) + '-' + today.getDate();
+            var month = today.getMonth()+1;
+            var day = today.getDate();
+            if(month<=9){
+                month = `0${(today.getMonth()+1)}`;
+            }
+            if(day<=9){
+                day = `0${today.getDate()}`;
+            }  
+            var date = today.getFullYear() + '-'+ month + '-' + day;
             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
             var bill = {
                 date: date,
@@ -111,7 +119,6 @@ app.delete("/api/products/:id", async (req, res) => {
                 products: data,
                 total_amount: totalAmount
             };
-            var check = false;
              database.collection('bill').insertOne(bill,function(err1, data1) {
                 if (err1) {
                     return res.send(err1) 
@@ -138,13 +145,13 @@ app.delete("/api/products/:id", async (req, res) => {
                                     if (err3) {
                                         return res.send(err3) 
                                    }else{
-                                        check = true;
+                                    createBill();
                                    }
                                 });
                             }else{
-                                check = true;
+                                createBill();
                             }
-                            if(check){
+                            function createBill(){
                                 data.map((a)=>(
                                     productCollection.updateOne({_id:a._id},{$inc:{sold_quantity: a.quantity, quantity:-a.quantity}},function(err4, data4) {
                                         if (err4) {
