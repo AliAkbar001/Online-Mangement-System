@@ -135,7 +135,15 @@ app.delete("/api/products/:id", async (req, res) => {
                         total_amount:totalAmount
                    }
                     database.collection('day').updateOne({date:date},{
-                        $push:{billData:{_id:data1.insertedId,total_amount:totalAmount}},$inc:{total_amount:+totalAmount}
+                        $push:{
+                            billData:{
+                                _id:data1.insertedId,
+                                total_amount:totalAmount
+                            }
+                        },
+                        $inc:{
+                            total_amount: + totalAmount
+                        }
                     },function(err2, data2) {
                         if (err2) {
                             return res.send(err2) 
